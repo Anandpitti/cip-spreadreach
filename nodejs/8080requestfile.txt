@@ -1,0 +1,1 @@
+{"query":"accident","accidentlocation":"america","accidentinjured":"3","accidenttime":"2 pm","avehicletype":"cars"}
