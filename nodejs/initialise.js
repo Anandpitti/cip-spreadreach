@@ -11,7 +11,7 @@ function initialise() {
         query : "", sendto : ""},{
         query : "", sendto : ""}];
     var connection = mysql.createConnection({
-        host     : 'localhost',
+        host     : '127.0.0.1',
         user     : 'root',
         password : '',
         database : 'spreadreach'

@@ -48,7 +48,7 @@ http.createServer(function(req,res){
 
 function checkdb(req, res) {
     var connection = mysql.createConnection({
-        host     : 'localhost',
+        host     : '127.0.0.1',
         user     : 'root',
         password : '',
         database : 'spreadreach'
@@ -78,7 +78,7 @@ function getconnections(res) {
             console.log(networks);
             res.write("success");
             var connection = mysql.createConnection({
-                host     : 'localhost',
+                host     : '127.0.0.1',
                 user     : 'root',
                 password : '',
                 database : 'spreadreach'
@@ -150,7 +150,7 @@ function sendrequest(req, res){
 function startprocess(packet){
     console.log(packet);
     var connection = mysql.createConnection({
-        host     : 'localhost',
+        host     : '127.0.0.1',
         user     : 'root',
         password : '',
         database : 'spreadreach'
@@ -168,7 +168,7 @@ function sendindividual(packet, sendto) {
     if(indextosend < sendto.length){
         //console.log("indextosend" + indextosend + "value: " + sendto[indextosend].sendto);
         var connection = mysql.createConnection({
-            host: 'localhost',
+            host: '127.0.0.1',
             user: 'root',
             password: '',
             database: 'spreadreach'
@@ -228,7 +228,7 @@ function sendfile(packet, sendto, ports, dbupdate) {
         if(flag == "1"){
             //update db
             var connection = mysql.createConnection({
-                host: 'localhost',
+                host: '127.0.0.1',
                 user: 'root',
                 password: '',
                 database: 'spreadreach'
@@ -279,7 +279,7 @@ function getpath(req, res) {
             queryname += data;
             res.writeHead(200, {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'});
             var connection = mysql.createConnection({
-                host     : 'localhost',
+                host     : '127.0.0.1',
                 user     : 'root',
                 password : '',
                 database : 'spreadreach'

@@ -14,7 +14,7 @@ require("jsdom").env("", function(err, window) {
 });
 
 global.nid=process.argv[3];
-global.nodecenter=hospital;
+//global.nodecenter=hospital;
 global.queryno = 0;
 
 http.createServer(function(req,res){
@@ -61,7 +61,7 @@ http.createServer(function(req,res){
 
 function checkdb(req, res) {
     var connection = mysql.createConnection({
-        host     : 'localhost',
+        host     : '127.0.0.1',
         user     : 'root',
         password : '',
         database : 'spreadreach'
@@ -85,7 +85,7 @@ function adminlogin(req,res){
         req.on('data', function (data) {
             body =JSON.parse(data);
             var connection = mysql.createConnection({
-                host: 'localhost',
+                host: '127.0.0.1',
                 user: 'root',
                 password: '',
                 database: 'spreadreach'
@@ -130,7 +130,7 @@ function adminregister(req,res){
         req.on('data', function (data) {
             body =JSON.parse(data);
             var connection = mysql.createConnection({
-                host: 'localhost',
+                host: '127.0.0.1',
                 user: 'root',
                 password: '',
                 database: 'spreadreach'
@@ -158,7 +158,7 @@ function adminregister(req,res){
 
 function createadmindb(nodeid){
     var connection = mysql.createConnection({
-        host     : 'localhost',
+        host     : '127.0.0.1',
         user     : 'root',
         password : '',
         database : 'spreadreach'
@@ -181,7 +181,7 @@ function admindetails(req, res){
         req.on('data', function (data) {
             body = data;
             var connection = mysql.createConnection({
-                host: 'localhost',
+                host: '127.0.0.1',
                 user: 'root',
                 password: '',
                 database: 'spreadreach'
@@ -211,7 +211,7 @@ function adminstatus(req, res){
         req.on('data', function (data) {
             body = data;
             var connection = mysql.createConnection({
-                host: 'localhost',
+                host: '127.0.0.1',
                 user: 'root',
                 password: '',
                 database: 'spreadreach'
@@ -241,7 +241,7 @@ function adminactivate(req, res){
         req.on('data', function (data) {
             body = data;
             var connection = mysql.createConnection({
-                host: 'localhost',
+                host: '127.0.0.1',
                 user: 'root',
                 password: '',
                 database: 'spreadreach'
@@ -276,7 +276,7 @@ function getconnections(nodeid) {
         else{
             //console.log(networks);
             var connection = mysql.createConnection({
-                host     : 'localhost',
+                host     : '127.0.0.1',
                 user     : 'root',
                 password : '',
                 database : 'spreadreach'
@@ -302,7 +302,7 @@ function adminping(req, res){
         req.on('data', function (data) {
             body = data;
             var connection = mysql.createConnection({
-                host: 'localhost',
+                host: '127.0.0.1',
                 user: 'root',
                 password: '',
                 database: 'spreadreach'
@@ -326,7 +326,6 @@ function adminping(req, res){
 }
 
 function clearquery(req, res) {
-    console.log("entering");
     var query;
     if(req.method == "POST") {
         var query = '';
@@ -334,7 +333,7 @@ function clearquery(req, res) {
             query =JSON.parse(data);
             res.writeHead(200, {'Content-Type': 'text', 'Access-Control-Allow-Origin': '*'});
             var connection = mysql.createConnection({
-                host     : 'localhost',
+                host     : '127.0.0.1',
                 user     : 'root',
                 password : '',
                 database : 'spreadreach'
@@ -360,7 +359,7 @@ function getpath(req, res) {
             queryname += data;
             res.writeHead(200, {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'});
             var connection = mysql.createConnection({
-                host     : 'localhost',
+                host     : '127.0.0.1',
                 user     : 'root',
                 password : '',
                 database : 'spreadreach'
@@ -384,12 +383,12 @@ function receivefile(req, res) {
     if(req.method == "POST") {
         var body = '';
         req.on('data', function (data) {
-            console.log("fileincoming");
+            //console.log("fileincoming");
             res.writeHead(200, {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'});
             res.end("1");
             body = JSON.parse(data);
             var connection = mysql.createConnection({
-                host     : 'localhost',
+                host     : '127.0.0.1',
                 user     : 'root',
                 password : '',
                 database : 'spreadreach'
@@ -429,7 +428,7 @@ function adminrqueries(req, res){
         req.on('data', function (data) {
             body = data;
             var connection = mysql.createConnection({
-                host: 'localhost',
+                host: '127.0.0.1',
                 user: 'root',
                 password: '',
                 database: 'spreadreach'
@@ -449,38 +448,67 @@ function adminrqueries(req, res){
     }
     else {
         res.writeHead(200, {"Content-Type": "text", 'Access-Control-Allow-Origin': '*'});
-        res.end("");
+        res.end("send the details properly");
     }
 }
 
 function adminupdate(req, res){
-    var connection = mysql.createConnection({
-        host     : 'localhost',
-        user     : 'root',
-        password : '',
-        database : 'spreadreach'
-    });
-    res.writeHead(200, {"Content-Type": 'application/json', 'Access-Control-Allow-Origin' : '*'});
-    var sql = 'select * from connections'+ nodeid;
-    connection.query(sql, function (err, result) {
+    if(req.method == "POST") {
+        var body = '';
+        req.on('data', function (data) {
+            body = data;
+            var connection = mysql.createConnection({
+                host     : '127.0.0.1',
+                user     : 'root',
+                password : '',
+                database : 'spreadreach'
+            });
+            res.writeHead(200, {"Content-Type": 'application/json', 'Access-Control-Allow-Origin' : '*'});
+            var sql = 'select * from admindetails where nodeid = "'+ body +'";';
+            connection.query(sql, function (err, result1) {
                 if (err) {
                     res.end("failed to retrive, try again");
                     throw err;
                 }
                 else {
-                    res.end("success");
-                    for(var i=0;i<result.length;i++){
-                        var url='http://localhost:' + result[i].portno + '/updatepackage';
-                        $post(url, nodecenter, function(data){
-                        });
-                    }
+                    var updatearr = {
+                    	nodeid : result1[0].nodeid,
+                    	destination : result1[0].organisationtype,
+                    	distance : '0',
+                    	port : port,
+                    	name : result1[0].organisationname
+                    };
+                    var sql = 'select * from connections'+ result1[0].nodeid;
+                    connection.query(sql, function (err, result) {
+                        if (err) {
+                            res.end("failed to retrive, try again");
+                            throw err;
+                        }
+                        else {
+                            res.end("success");
+                            for(var i=0;i<result.length;i++){
+                                var url='http://localhost:' + result[i].portno + '/updatepackage';
+                                $.post(url, JSON.stringify(updatearr), function(data){
+                                });
+                            }
+                        }
+                    });
                 }
             });
+        });
+    }
+    else {
+        res.writeHead(200, {"Content-Type": "text", 'Access-Control-Allow-Origin': '*'});
+        res.end("send the details properly");
+    }
+
+
+
 }
 
 function admincontact(req, res){
     var connection = mysql.createConnection({
-        host     : 'localhost',
+        host     : '127.0.0.1',
         user     : 'root',
         password : '',
         database : 'spreadreach'

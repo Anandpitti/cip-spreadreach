@@ -3,7 +3,7 @@ var port=5555;
 
 function findnodeid(){
     var c = document.cookie;
-    flag=0;
+    var flag=0;
     var k=0;
     nodeid="";
     for(var i=0; i<c.length; i++){
@@ -105,6 +105,7 @@ function displayping(){
 }
 
 function displayupdate(){
+    findnodeid();
     var t = document.getElementById("adminupdate");
     var url = "http://localhost:"+ port +"/adminupdate";
     $.post(url, nodeid , function (data) {

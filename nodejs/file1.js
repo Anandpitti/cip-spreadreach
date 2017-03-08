@@ -33,7 +33,7 @@ http.createServer(function(req,res){
 
 function checkdb(req, res) {
     var connection = mysql.createConnection({
-        host     : 'localhost',
+        host     : '127.0.0.1',
         user     : 'root',
         password : '',
         database : 'spreadreach'
@@ -94,7 +94,7 @@ global.indextosend = 0;
 
 function startprocess(packet){
     var connection = mysql.createConnection({
-        host     : 'localhost',
+        host     : '127.0.0.1',
         user     : 'root',
         password : '',
         database : 'spreadreach'
@@ -112,7 +112,7 @@ function sendindividual(packet, sendto) {
     if(indextosend < sendto.length){
         console.log(indextosend);
         var connection = mysql.createConnection({
-            host: 'localhost',
+            host: '127.0.0.1',
             user: 'root',
             password: '',
             database: 'spreadreach'
@@ -149,7 +149,7 @@ function searchandsend(packet) {
                 .then(function (next) {
                     setTimeout(function () {
                         var connection = mysql.createConnection({
-                            host     : 'localhost',
+                            host     : '127.0.0.1',
                             user     : 'root',
                             password : '',
                             database : 'spreadreach'
@@ -170,7 +170,7 @@ function searchandsend(packet) {
                         console.log(sendto.length);
                         for(indextosend=0; indextosend<sendto.length; indextosend++) {
                             var connection = mysql.createConnection({
-                                host: 'localhost',
+                                host: '127.0.0.1',
                                 user: 'root',
                                 password: '',
                                 database: 'spreadreach'
@@ -247,7 +247,7 @@ function getpath(req, res) {
             queryname += data;
             res.writeHead(200, {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'});
             var connection = mysql.createConnection({
-                host     : 'localhost',
+                host     : '127.0.0.1',
                 user     : 'root',
                 password : '',
                 database : 'spreadreach'

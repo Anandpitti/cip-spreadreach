@@ -43,12 +43,15 @@ http.createServer(function(req,res){
     else if(req.url == "/receivefile"){
         receivefile(req, res);
     }
+    else if(req.url == "/updatepackage"){
+        updatepackage(req, res);
+    }
 }).listen(port);//, "192.168.0.105");
 
 
 function checkdb(req, res) {
     var connection = mysql.createConnection({
-        host     : 'localhost',
+        host     : '127.0.0.1',
         user     : 'root',
         password : '',
         database : 'spreadreach'
@@ -77,7 +80,7 @@ function getconnections(res) {
         else{
             res.write("success");
             var connection = mysql.createConnection({
-                host     : 'localhost',
+                host     : '127.0.0.1',
                 user     : 'root',
                 password : '',
                 database : 'spreadreach'
@@ -147,9 +150,9 @@ function sendrequest(req, res){
 }
 
 function startprocess(packet){
-    console.log(packet);
+    //console.log(packet);
     var connection = mysql.createConnection({
-        host     : 'localhost',
+        host     : '127.0.0.1',
         user     : 'root',
         password : '',
         database : 'spreadreach'
@@ -166,7 +169,7 @@ function startprocess(packet){
 function sendindividual(packet, sendto) {
     if(indextosend < sendto.length){
         var connection = mysql.createConnection({
-            host: 'localhost',
+            host: '127.0.0.1',
             user: 'root',
             password: '',
             database: 'spreadreach'
@@ -213,7 +216,7 @@ function sendfile(packet, sendto, ports, dbupdate) {
         flag = data;
         if(flag == "1"){
             var connection = mysql.createConnection({
-                host: 'localhost',
+                host: '127.0.0.1',
                 user: 'root',
                 password: '',
                 database: 'spreadreach'
@@ -263,7 +266,7 @@ function getpath(req, res) {
             queryname += data;
             res.writeHead(200, {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'});
             var connection = mysql.createConnection({
-                host     : 'localhost',
+                host     : '127.0.0.1',
                 user     : 'root',
                 password : '',
                 database : 'spreadreach'
@@ -286,7 +289,7 @@ function receivefile(req, res) {
     if(req.method == "POST") {
         var body = '';
         req.on('data', function (data) {
-            console.log("fileincoming");
+            //console.log("fileincoming");
             res.writeHead(200, {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'});
             res.end("1");
             body += data;
@@ -303,6 +306,95 @@ function receivefile(req, res) {
                     });
                     startprocess(JSON.parse(body));
                 });
+            });
+        });
+    }
+    else {
+        res.writeHead(200, {"Content-Type": "text", 'Access-Control-Allow-Origin': '*'});
+        res.end("send the details properly, this is not post method");
+    }
+}
+
+function getconnectionsforupdate() {
+    wifi.init({
+        iface : null
+    });
+    wifi.scan(function (err, networks) {
+        if(err){
+        }
+        else{
+            var connection = mysql.createConnection({
+                host     : '127.0.0.1',
+                user     : 'root',
+                password : '',
+                database : 'spreadreach'
+            });
+            for(var i=0; i<networks.length;){
+                var id = networks[i].ssid.split('_');
+                if(id[0] == "nap"){
+                    var sql = 'insert into connections'+ port +' values("'+ id[1] +'");';
+                    connection.query(sql, function (err) {
+                        if(err) throw err;
+                        connection.end(function(){});
+                    });
+                }
+                i++;
+            }
+        }
+    })
+}
+
+
+function updatepackage(req, res) {
+    getconnectionsforupdate();
+    if(req.method == "POST") {
+        var body = '';
+        req.on('data', function (data) {
+            body = JSON.parse(data);
+            var connection = mysql.createConnection({
+                host: '127.0.0.1',
+                user: 'root',
+                password: '',
+                database: 'spreadreach'
+            });
+            var sql = 'select * from routertable'+ port +' where destination="' + body.destination + '";';
+            connection.query(sql, function (err, result) {
+                if (err) throw err;
+                else{
+                    var no = parseInt(body.distance);
+                    no++;
+                    if(result[0].distance > body.distance){
+                        var sql = 'delete from routertable'+ port +' where destination="' + body.destination + '";';
+                        connection.query(sql, function (err) {
+                            if(!err){
+                                sql = 'insert into routertable'+ port + ' values("'+ nodeid +'","'+ body.destination +'","'+ no +'","'+ port +'","'+ body.name +'");';
+                                connection.query(sql, function (err) {
+                                    if (err) throw err;
+                                });
+                            }
+                        });
+                    }
+                    var updatearr = {
+                        nodeid : nodeid,
+                        destination : body.destination,
+                        distance : no,
+                        port : port,
+                        name : body.name
+                    };
+                    var updatesql = 'select * from connections'+ port;
+                    connection.query(updatesql, function (err, result1) {
+                        if (err) {
+                            throw err;
+                        }
+                        else {
+                            for(var i=0;i<result1.length;i++){
+                                var url='http://localhost:' + result1[i].portno + '/updatepackage';
+                                $.post(url, JSON.stringify(updatearr), function(data){
+                                });
+                            }
+                        }
+                    });
+                }
             });
         });
     }
