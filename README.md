@@ -1,9 +1,9 @@
 # cip-spreadreach
 
 ##prerequisites to run this project
-`1. apache server(xampp) for running the php files __
+1. apache server(xampp) for running the php files 
 2. mysql server(xampp) for maintaining the database <br />
-3. node js installed in the system to run the node js scripts(npm and noddejs)`
+3. node js installed in the system to run the node js scripts(npm and noddejs)
 
 #how to run
 
